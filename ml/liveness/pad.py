@@ -125,7 +125,7 @@ class PADDetector:
             pre_sigmoid_val = None
             def hook_fn(module, input, output):
                 nonlocal pre_sigmoid_val
-                pre_sigmoid_val = input[0].item()
+                pre_sigmoid_val = output.item()
                 
             hook = self.model.classifier[2].register_forward_hook(hook_fn)
             

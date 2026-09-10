@@ -117,6 +117,9 @@ class RPPGExtractor:
             signal_power += power[i]
             
         total_power = np.sum(power[valid_idx])
+        if total_power < 1e-6:
+            return 0.0
+            
         noise_power = total_power - signal_power
         
         # Avoid division by zero

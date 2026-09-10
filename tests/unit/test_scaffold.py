@@ -54,37 +54,43 @@ class TestAuthRoutes:
     """Test authentication route registration and basic flow."""
 
     def test_register(self, client):
+        import uuid
+        username = f"testuser_{uuid.uuid4().hex}"
         resp = client.post("/api/auth/register", json={
-            "username": "testuser_scaffold",
+            "username": username,
             "password": "securepassword123",
         })
         assert resp.status_code == 201
         data = resp.json()
-        assert data["username"] == "testuser_scaffold"
+        assert data["username"] == username
         assert "id" in data
 
     def test_register_duplicate(self, client):
+        import uuid
+        username = f"dupuser_{uuid.uuid4().hex}"
         # First registration
         client.post("/api/auth/register", json={
-            "username": "duplicate_user",
+            "username": username,
             "password": "securepassword123",
         })
         # Second should fail
         resp = client.post("/api/auth/register", json={
-            "username": "duplicate_user",
+            "username": username,
             "password": "securepassword123",
         })
         assert resp.status_code == 409
 
     def test_login_success(self, client):
+        import uuid
+        username = f"loginuser_{uuid.uuid4().hex}"
         # Register first
         client.post("/api/auth/register", json={
-            "username": "loginuser",
+            "username": username,
             "password": "securepassword123",
         })
         # Login
         resp = client.post("/api/auth/login", json={
-            "username": "loginuser",
+            "username": username,
             "password": "securepassword123",
         })
         assert resp.status_code == 200
@@ -94,8 +100,14 @@ class TestAuthRoutes:
         assert data["token_type"] == "bearer"
 
     def test_login_wrong_password(self, client):
+        import uuid
+        username = f"loginuser_{uuid.uuid4().hex}"
+        client.post("/api/auth/register", json={
+            "username": username,
+            "password": "securepassword123",
+        })
         resp = client.post("/api/auth/login", json={
-            "username": "loginuser",
+            "username": username,
             "password": "wrongpassword",
         })
         assert resp.status_code == 401
