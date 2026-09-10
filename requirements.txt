@@ -1,0 +1,51 @@
+# ─── Core Framework ────────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+python-multipart==0.0.20
+
+# ─── Database ──────────────────────────────────────────────────
+sqlalchemy==2.0.36
+aiosqlite==0.20.0
+
+# ─── Authentication / Security ─────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+py_webauthn==2.5.0
+cbor2==5.6.5
+
+# ─── ML / Computer Vision ─────────────────────────────────────
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+Pillow==11.1.0
+scikit-learn==1.6.1
+scipy==1.15.1
+
+# ─── Deep Learning ─────────────────────────────────────────────
+torch==2.5.1
+torchvision==0.20.1
+onnxruntime==1.20.1
+
+# ─── Face Detection & Alignment ───────────────────────────────
+# facenet-pytorch provides MTCNN for face detection
+facenet-pytorch==2.6.0
+
+# ─── Explainability ───────────────────────────────────────────
+shap==0.46.0
+
+# ─── Behavioral Biometrics ────────────────────────────────────
+# (Uses torch LSTM — no extra dependency)
+
+# ─── Utilities ─────────────────────────────────────────────────
+httpx==0.28.1
+websockets==14.1
+orjson==3.10.14
+
+# ─── Testing ──────────────────────────────────────────────────
+pytest==8.3.4
+pytest-asyncio==0.25.0
+pytest-cov==6.0.0
+httpx  # also used as test client for FastAPI
+pynput

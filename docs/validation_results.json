@@ -1,0 +1,225 @@
+{
+  "facial": {
+    "LFW": {
+      "status": "measured",
+      "dataset": "LFW (Labeled Faces in the Wild)",
+      "evaluated_pairs": 5999,
+      "skipped_pairs": 1,
+      "threshold": 0.6,
+      "accuracy": 0.922153692282047,
+      "far": 0.0006666666666666666,
+      "frr": 0.15505168389463153,
+      "execution_time_seconds": 589.9386839866638
+    }
+  },
+  "liveness_pad": {
+    "NUAA": {
+      "status": "prototype",
+      "is_prototype": true,
+      "sample_count": 12614,
+      "failures": 0,
+      "threshold": 0.5,
+      "accuracy": 0.4047090534326938,
+      "far": 1.0,
+      "frr": 0.0,
+      "confusion_matrix": {
+        "TP": 5105,
+        "TN": 0,
+        "FP": 7509,
+        "FN": 0
+      },
+      "execution_time_seconds": 532.3290836811066,
+      "subset": false
+    },
+    "Replay-Attack": {
+      "status": "prototype",
+      "is_prototype": true,
+      "sample_count": 24,
+      "failures": 5,
+      "threshold": 0.5,
+      "accuracy": 0.0,
+      "far": 1.0,
+      "frr": 0,
+      "confusion_matrix": {
+        "TP": 0,
+        "TN": 0,
+        "FP": 24,
+        "FN": 0
+      },
+      "execution_time_seconds": 3.8140227794647217,
+      "subset": false
+    },
+    "CelebA-Spoof": {
+      "status": "blocked",
+      "reason": "Provided dataset is standard CelebA (list_attr_celeba.csv), which lacks presentation attack labels. CelebA-Spoof is required."
+    }
+  },
+  "liveness_rppg": {
+    "NFI-rPPG-Deepfake": {
+      "status": "prototype",
+      "is_prototype": true,
+      "sample_count": 500,
+      "threshold": 0.5,
+      "mean_live_confidence": 0.7386206896551726,
+      "median_live_confidence": 0.9,
+      "mean_spoof_confidence": 0.8100000000000003,
+      "median_spoof_confidence": 0.9,
+      "accuracy": 0.518,
+      "far": 0.9,
+      "frr": 0.1793103448275862,
+      "execution_time_seconds": 122.83991646766663
+    },
+    "Kaggle-rPPG": {
+      "status": "prototype",
+      "is_prototype": true,
+      "sample_count": 10,
+      "threshold": 0.5,
+      "mean_live_confidence": 0.8300000000000001,
+      "median_live_confidence": 0.9,
+      "frr": 0.1,
+      "execution_time_seconds": 9.000804901123047,
+      "notes": "Dataset only contains genuine physiological recordings. Measured FRR subset."
+    }
+  },
+  "behavioral": {
+    "CMU": {
+      "status": "prototype",
+      "is_prototype": true,
+      "dataset": "CMU Keystroke Dynamics Benchmark",
+      "samples_tested": 5100,
+      "threshold": 0.7,
+      "accuracy": 0.5,
+      "far": 1.0,
+      "frr": 0.0,
+      "execution_time_seconds": 0.007468461990356445
+    }
+  },
+  "trust_engine_latency_ms": {
+    "status": "partial",
+    "runs": 100,
+    "mean_ms": 1.4306499999747757,
+    "median_ms": 1.409699999840086,
+    "min_ms": 1.3668000001416658,
+    "max_ms": 2.126400000634021,
+    "std_dev_ms": 0.08787758992563967
+  },
+  "latency_end_to_end": {
+    "status": "measured",
+    "runs": 20,
+    "mean_ms": 63.14522000011493,
+    "median_ms": 61.813899999833666,
+    "min_ms": 56.798800000251504,
+    "max_ms": 92.61770000011893,
+    "std_dev_ms": 7.636655016426865,
+    "notes": "True end-to-end latency (image processing -> face alignment -> embeddings -> pad -> rppg -> behavioral sequence -> trust fusion -> SHAP)"
+  },
+  "behavioral_phase10": {
+    "status": "measured",
+    "phase": 10,
+    "model": "Scikit-Learn OneClassSVM (RBF Kernel)",
+    "dataset": "CMU Keystroke Dynamics Benchmark",
+    "protocol": "Enrollment on first 200 samples. Tested on remaining 200 genuine + 200 random impostors per subject.",
+    "samples_tested": 20400,
+    "genuine_samples": 10200,
+    "impostor_samples": 10200,
+    "threshold": 0.5,
+    "accuracy": 0.745686274509804,
+    "far": 0.04098039215686274,
+    "frr": 0.4676470588235294,
+    "precision": 0.9285225718194254,
+    "recall": 0.5323529411764706,
+    "confusion_matrix": {
+      "TP": 5430,
+      "TN": 9782,
+      "FP": 418,
+      "FN": 4770
+    },
+    "execution_time_seconds": 3.831484079360962
+  },
+  "liveness_rppg_phase10": {
+    "NFI-rPPG-Deepfake": {
+      "status": "measured",
+      "phase": 10,
+      "model": "DSP (Butterworth Bandpass + FFT SNR)",
+      "sample_count": 500,
+      "threshold": 0.5,
+      "mean_live_confidence": 0.36771922292129244,
+      "median_live_confidence": 0.2696229054947915,
+      "mean_spoof_confidence": 0.3831383796994927,
+      "median_spoof_confidence": 0.28991477650938013,
+      "accuracy": 0.466,
+      "far": 0.28095238095238095,
+      "frr": 0.7172413793103448,
+      "execution_time_seconds": 143.25662755966187
+    },
+    "Kaggle-rPPG": {
+      "status": "measured",
+      "phase": 10,
+      "model": "DSP (Butterworth Bandpass + FFT SNR)",
+      "sample_count": 10,
+      "threshold": 0.5,
+      "mean_live_confidence": 0.5329104639225027,
+      "median_live_confidence": 0.5681796830210849,
+      "frr": 0.5,
+      "execution_time_seconds": 7.3613598346710205,
+      "notes": "Dataset only contains genuine physiological recordings. Measured FRR."
+    }
+  },
+  "latency_phase10": {
+    "status": "measured",
+    "phase": 10,
+    "runs": 20,
+    "mean_ms": 127.56023500014635,
+    "median_ms": 125.74769999991986,
+    "min_ms": 114.96639999859326,
+    "max_ms": 160.09480000138865,
+    "std_dev_ms": 10.314094330701556,
+    "notes": "True end-to-end latency (image processing -> face alignment -> embeddings -> pad_cnn -> rppg_dsp -> behavioral_svm -> trust fusion -> SHAP)"
+  },
+  "liveness_pad_phase10": {
+    "NUAA": {
+      "status": "measured",
+      "phase": 10,
+      "model": "PyTorch CNN (4-layer)",
+      "sample_count": 12614,
+      "failures": 0,
+      "threshold": 0.5,
+      "accuracy": 0.9983351831298557,
+      "far": 0.00013317352510320947,
+      "frr": 0.0039177277179236044,
+      "confusion_matrix": {
+        "TP": 5085,
+        "TN": 7508,
+        "FP": 1,
+        "FN": 20
+      },
+      "execution_time_seconds": 54.72392177581787,
+      "subset": false,
+      "is_prototype": false
+    },
+    "Replay-Attack": {
+      "status": "measured",
+      "phase": 10,
+      "model": "PyTorch CNN (4-layer)",
+      "sample_count": 24,
+      "failures": 5,
+      "threshold": 0.5,
+      "accuracy": 0.5416666666666666,
+      "far": 0.4583333333333333,
+      "frr": 0,
+      "confusion_matrix": {
+        "TP": 0,
+        "TN": 13,
+        "FP": 11,
+        "FN": 0
+      },
+      "execution_time_seconds": 3.8587307929992676,
+      "subset": false,
+      "is_prototype": false
+    },
+    "CelebA-Spoof": {
+      "status": "blocked",
+      "reason": "Provided dataset is standard CelebA (list_attr_celeba.csv), which lacks presentation attack labels. CelebA-Spoof is required."
+    }
+  }
+}

@@ -1,0 +1,852 @@
+[
+  {
+    "test": "1",
+    "timestamp": 1788991867.3001618,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 2.2318692033396204e-11
+    },
+    "rppg": {
+      "state": "Collecting physiological signal (38/150)",
+      "score": 1.0
+    },
+    "behavioral": {
+      "state": "Collecting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.5000000000111593
+    },
+    "latency_ms": 33.94508361816406
+  },
+  {
+    "test": "LIVE_TEST_001",
+    "timestamp": 1788992785.8101516,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 2.8805743901294534e-10
+    },
+    "rppg": {
+      "state": "Collecting physiological signal (25/150)",
+      "score": 0.5
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.25000000014402873
+    },
+    "latency_ms": 33.350467681884766
+  },
+  {
+    "test": "LIVE_TEST_002",
+    "timestamp": 1788992788.4453797,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 3.1119418153480183e-10
+    },
+    "rppg": {
+      "state": "Collecting physiological signal (74/150)",
+      "score": 1.0
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.5000000001555971
+    },
+    "latency_ms": 33.09321403503418
+  },
+  {
+    "test": "LIVE_TEST_003",
+    "timestamp": 1788992794.0063047,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.0698229857553088e-08
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.34)",
+      "score": 0.3442445993904796
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.17212230504435472
+    },
+    "latency_ms": 36.30208969116211
+  },
+  {
+    "test": "LIVE_TEST_004",
+    "timestamp": 1788992795.8137052,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.429749652004375e-09
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.14)",
+      "score": 0.13862199493754318
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.06931099818364642
+    },
+    "latency_ms": 35.775184631347656
+  },
+  {
+    "test": "LIVE_TEST_005",
+    "timestamp": 1788992797.5569382,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.130747318001113e-08
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.35)",
+      "score": 0.34863577905420157
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.17431789518083737
+    },
+    "latency_ms": 36.48519515991211
+  },
+  {
+    "test": "LIVE_TEST_006",
+    "timestamp": 1788992799.2395499,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.5777301687336376e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.78)",
+      "score": 0.7757220121583989
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3878610068680645
+    },
+    "latency_ms": 35.01605987548828
+  },
+  {
+    "test": "LIVE_TEST_007",
+    "timestamp": 1788992799.423371,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 4.728514024776587e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.72)",
+      "score": 0.7242876477695052
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3621438262490096
+    },
+    "latency_ms": 32.709598541259766
+  },
+  {
+    "test": "LIVE_TEST_008",
+    "timestamp": 1788992799.6201854,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 3.170308238154007e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.69)",
+      "score": 0.6932575623542985
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.34662878276230336
+    },
+    "latency_ms": 36.00001335144043
+  },
+  {
+    "test": "LIVE_TEST_009",
+    "timestamp": 1788992799.7835066,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 6.102970351307135e-10
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.71)",
+      "score": 0.7058469418232436
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3529234712167703
+    },
+    "latency_ms": 36.58008575439453
+  },
+  {
+    "test": "LIVE_TEST_010",
+    "timestamp": 1788992799.9938319,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 3.3159843759733576e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.64)",
+      "score": 0.6357312460499724
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3178656246829784
+    },
+    "latency_ms": 38.42616081237793
+  },
+  {
+    "test": "LIVE_TEST_011",
+    "timestamp": 1788992800.1360092,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 4.088544613978229e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.61)",
+      "score": 0.610433198415345
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.30521660125194483
+    },
+    "latency_ms": 32.58204460144043
+  },
+  {
+    "test": "LIVE_TEST_012",
+    "timestamp": 1788992800.3130481,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.4590727515084723e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.52)",
+      "score": 0.5202542273325104
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.26012711439579156
+    },
+    "latency_ms": 37.06479072570801
+  },
+  {
+    "test": "LIVE_TEST_013",
+    "timestamp": 1788992800.4859087,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.059043963635986e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.48)",
+      "score": 0.47833427827666103
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.2391671396678525
+    },
+    "latency_ms": 36.19813919067383
+  },
+  {
+    "test": "LIVE_TEST_014",
+    "timestamp": 1788992800.6800857,
+    "facial": {
+      "state": "Face Detected (Not enrolled)",
+      "score": 0.0
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.365302204625607e-09
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.49)",
+      "score": 0.48815789038214963
+    },
+    "behavioral": {
+      "state": "Press E to start enrollment",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.24407894587372592
+    },
+    "latency_ms": 37.92572021484375
+  },
+  {
+    "test": "LIVE_TEST_001",
+    "timestamp": 1788994153.464192,
+    "facial": {
+      "state": "Unrecognized",
+      "score": 0.5234398245811462
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 7.087117410264909e-05
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.33)",
+      "score": 0.3264980951310826
+    },
+    "behavioral": {
+      "state": "Anomalous (0.16)",
+      "score": 0.15925828236790548
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3175364056047283
+    },
+    "latency_ms": 58.63213539123535
+  },
+  {
+    "test": "LIVE_TEST_002",
+    "timestamp": 1788994155.662515,
+    "facial": {
+      "state": "Unrecognized",
+      "score": 0.5992776155471802
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 0.00015898920537438244
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.35)",
+      "score": 0.35026431186390405
+    },
+    "behavioral": {
+      "state": "Anomalous (0.16)",
+      "score": 0.15925828236790548
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3539824968449192
+    },
+    "latency_ms": 57.654619216918945
+  },
+  {
+    "test": "LIVE_TEST_003",
+    "timestamp": 1788994171.30304,
+    "facial": {
+      "state": "Unrecognized",
+      "score": 0.5587218999862671
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 7.034671511974011e-07
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.03)",
+      "score": 0.03490372131756599
+    },
+    "behavioral": {
+      "state": "Anomalous (0.16)",
+      "score": 0.15925828236790548
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.28690236497153315
+    },
+    "latency_ms": 59.7686767578125
+  },
+  {
+    "test": "LIVE_TEST_001",
+    "timestamp": 1788994420.4904125,
+    "facial": {
+      "state": "Recognized (0.76)",
+      "score": 0.7555603384971619
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 3.157897936034715e-06
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.32)",
+      "score": 0.3222484400350024
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.504895171225183
+    },
+    "latency_ms": 64.36777114868164
+  },
+  {
+    "test": "LIVE_TEST_002",
+    "timestamp": 1788994425.9247563,
+    "facial": {
+      "state": "Recognized (0.66)",
+      "score": 0.6589234471321106
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 2.1057468984508887e-05
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.08)",
+      "score": 0.07541024333073484
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.3969683521245349
+    },
+    "latency_ms": 56.8540096282959
+  },
+  {
+    "test": "LIVE_TEST_003",
+    "timestamp": 1788994426.6671977,
+    "facial": {
+      "state": "Recognized (0.66)",
+      "score": 0.6645950078964233
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 2.5023917260114104e-05
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.05)",
+      "score": 0.046426676092595986
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.39413813408675663
+    },
+    "latency_ms": 60.034751892089844
+  },
+  {
+    "test": "LIVE_TEST_004",
+    "timestamp": 1788994435.7322996,
+    "facial": {
+      "state": "Recognized (0.70)",
+      "score": 0.7040276527404785
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 1.0473902420926606e-06
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.30)",
+      "score": 0.297725184867755
+    },
+    "behavioral": {
+      "state": "Anomalous (0.16)",
+      "score": 0.1593458865282177
+    },
+    "trust": {
+      "decision": "REJECTED",
+      "score": 0.39088326210500673
+    },
+    "latency_ms": 53.94458770751953
+  },
+  {
+    "test": "LIVE_TEST_001",
+    "timestamp": 1788994926.458501,
+    "facial": {
+      "state": "Recognized (0.79)",
+      "score": 0.7901946902275085
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 2.8763443182810988e-08
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.11)",
+      "score": 0.1110262901959305
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.4803892254543307
+    },
+    "latency_ms": 56.67400360107422
+  },
+  {
+    "test": "LIVE_TEST_002",
+    "timestamp": 1788994932.673947,
+    "facial": {
+      "state": "Recognized (0.78)",
+      "score": 0.7757046222686768
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 9.441136761267899e-09
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.29)",
+      "score": 0.2941271692845394
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.5106150300794676
+    },
+    "latency_ms": 62.22248077392578
+  },
+  {
+    "test": "LIVE_TEST_003",
+    "timestamp": 1788994933.8879402,
+    "facial": {
+      "state": "Recognized (0.75)",
+      "score": 0.7468178868293762
+    },
+    "pad": {
+      "state": "Spoof (0.00)",
+      "score": 2.992551912939234e-07
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.56)",
+      "score": 0.5621815312906131
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.5504269952091763
+    },
+    "latency_ms": 59.992313385009766
+  },
+  {
+    "test": "LIVE_TEST_001",
+    "timestamp": 1789043658.9959838,
+    "facial": {
+      "state": "Recognized (0.92)",
+      "score": 0.9179977178573608
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.005171346012502909
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 1.00)",
+      "score": 1.0
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "TRUSTED",
+      "score": 0.7428239640044834
+    },
+    "latency_ms": 96.24528884887695
+  },
+  {
+    "test": "LIVE_TEST_002",
+    "timestamp": 1789043660.8337643,
+    "facial": {
+      "state": "Recognized (0.91)",
+      "score": 0.909841775894165
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.006799025926738977
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 1.00)",
+      "score": 1.0
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "TRUSTED",
+      "score": 0.738450460200456
+    },
+    "latency_ms": 75.67214965820312
+  },
+  {
+    "test": "LIVE_TEST_003",
+    "timestamp": 1789043663.48404,
+    "facial": {
+      "state": "Recognized (0.91)",
+      "score": 0.9070435166358948
+    },
+    "pad": {
+      "state": "Spoof (0.03)",
+      "score": 0.02912094071507454
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.98)",
+      "score": 0.9784721324962903
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "TRUSTED",
+      "score": 0.7369996093942389
+    },
+    "latency_ms": 70.61910629272461
+  },
+  {
+    "test": "LIVE_TEST_004",
+    "timestamp": 1789043663.8341815,
+    "facial": {
+      "state": "Recognized (0.91)",
+      "score": 0.9137079119682312
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.01217476837337017
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 1.00)",
+      "score": 1.0
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "TRUSTED",
+      "score": 0.741819737602519
+    },
+    "latency_ms": 66.80727005004883
+  },
+  {
+    "test": "LIVE_TEST_005",
+    "timestamp": 1789043666.350516,
+    "facial": {
+      "state": "Recognized (0.91)",
+      "score": 0.9132308959960938
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.009120236150920391
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.33)",
+      "score": 0.32571808207563574
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.5987319708045449
+    },
+    "latency_ms": 88.958740234375
+  },
+  {
+    "test": "LIVE_TEST_006",
+    "timestamp": 1789043666.7930973,
+    "facial": {
+      "state": "Recognized (0.93)",
+      "score": 0.9313855171203613
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.012705590575933456
+    },
+    "rppg": {
+      "state": "Valid Signal (Conf: 0.41)",
+      "score": 0.4130321044851368
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.6283965600644105
+    },
+    "latency_ms": 66.76840782165527
+  },
+  {
+    "test": "LIVE_TEST_007",
+    "timestamp": 1789043667.0366287,
+    "facial": {
+      "state": "Recognized (0.92)",
+      "score": 0.9162523746490479
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.007470706012099981
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.36)",
+      "score": 0.364411638367895
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.6082898193952314
+    },
+    "latency_ms": 72.36647605895996
+  },
+  {
+    "test": "LIVE_TEST_008",
+    "timestamp": 1789043667.2159302,
+    "facial": {
+      "state": "Recognized (0.93)",
+      "score": 0.9308417439460754
+    },
+    "pad": {
+      "state": "Spoof (0.01)",
+      "score": 0.006813282147049904
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.30)",
+      "score": 0.29796856350185974
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.6025793494971992
+    },
+    "latency_ms": 75.34193992614746
+  },
+  {
+    "test": "LIVE_TEST_009",
+    "timestamp": 1789043677.3257103,
+    "facial": {
+      "state": "Recognized (0.94)",
+      "score": 0.9370861053466797
+    },
+    "pad": {
+      "state": "Spoof (0.04)",
+      "score": 0.041899923235177994
+    },
+    "rppg": {
+      "state": "Poor Signal (Conf: 0.35)",
+      "score": 0.3486590082028979
+    },
+    "behavioral": {
+      "state": "Enrolled \u2014 awaiting typing...",
+      "score": 0.0
+    },
+    "trust": {
+      "decision": "STEP-UP",
+      "score": 0.6242760765880355
+    },
+    "latency_ms": 103.46126556396484
+  }
+]
