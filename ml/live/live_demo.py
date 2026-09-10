@@ -88,7 +88,7 @@ class LiveDemoApp:
             typing_samples: list of feature vectors (each a list of floats).
                             Can be a single sample or multiple real samples.
         """
-        print("--- Live Demo Enrollment ---")
+        print("\n--- Live Demo Enrollment ---")
         face = self.aligner.align(frame)
         if face is None:
             print("Failed to enroll: No face detected.")
@@ -98,43 +98,28 @@ class LiveDemoApp:
 
         if typing_samples:
             n_real = len(typing_samples)
-            print(f"Received {n_real} REAL typing sample(s) for behavioral enrollment.")
+            print(f"Received {n_real} REAL physical typing sample(s) for behavioral enrollment.")
 
-            # Log real enrollment samples
+            # Log real enrollment samples explicitly
             for i, vec in enumerate(typing_samples):
                 arr = np.array(vec)
-                print(f"  Enrollment sample {i}: shape={arr.shape} mean={arr.mean():.4f} "
-                      f"std={arr.std():.4f} min={arr.min():.4f} max={arr.max():.4f}")
+                print(f"  Enrollment sample {i+1}:")
+                print(f"    shape={arr.shape} mean={arr.mean():.4f} std={arr.std():.4f} min={arr.min():.4f} max={arr.max():.4f}")
 
-            # Bootstrap to 200 samples for OneClassSVM
-            # CALIBRATION: σ=0.08 matches natural human typing variability
-            # (σ=0.01 was too tight, creating a degenerate decision boundary)
-            augmented = []
-            for base in typing_samples:
-                base_vec = np.array(base)
-                samples_per_real = max(1, 200 // n_real)
-                for _ in range(samples_per_real):
-                    noise = np.random.normal(0, 0.08, len(base_vec))
-                    augmented.append((base_vec + noise).tolist())
-
-            # Pad to at least 200
-            while len(augmented) < 200:
-                base_vec = np.array(typing_samples[np.random.randint(n_real)])
-                noise = np.random.normal(0, 0.08, len(base_vec))
-                augmented.append((base_vec + noise).tolist())
-
+            # Do NOT synthesize samples. Fit directly on the 3-5 real physical vectors.
             self.enrollment_sample_count = n_real
-            print(f"Bootstrapped {len(augmented)} training samples from {n_real} real "
-                  f"sample(s) with σ=0.08 noise augmentation.")
-
-            self.behavioral.enroll("live_demo_start_user", augmented)
-
-            # Log scaler state
-            profile = self.behavioral.profiles.get("live_demo_start_user")
-            if profile:
-                scaler = profile["scaler"]
-                print(f"  Scaler mean: {scaler.mean_}")
-                print(f"  Scaler std:  {scaler.scale_}")
+            print(f"Fitting OneClassSVM profile using EXACTLY {n_real} physical samples (no synthetic augmentation).")
+            
+            try:
+                self.behavioral.enroll("live_demo_start_user", typing_samples)
+                # Log scaler state
+                profile = self.behavioral.profiles.get("live_demo_start_user")
+                if profile:
+                    scaler = profile["scaler"]
+                    print(f"  Scaler mean: {scaler.mean_}")
+                    print(f"  Scaler scale:  {scaler.scale_}")
+            except Exception as e:
+                print(f"  Behavioral enrollment failed: {e}")
 
         self.is_enrolled = True
         print("Enrollment successful!")
@@ -174,13 +159,15 @@ class LiveDemoApp:
         else:
             self.face_state = "Face Detected (Not enrolled)"
 
-        # 3. PAD — Use detect_frame() with the FULL webcam frame
-        #    This matches the training domain (full uncropped NUAA images).
-        #    The old detect(face) path sent MTCNN-cropped face tensors which
-        #    are out-of-distribution for the CNN trained on full images.
-        pad_raw, pad_state = self.pad.detect_frame(frame)
+        # 3. PAD — Use detect_frame_with_diagnostics() with the FULL webcam frame
+        pad_diag = self.pad.detect_frame_with_diagnostics(frame)
+        pad_raw = pad_diag.get("score", 0.0)
+        pad_state = pad_diag.get("state", PAD_UNAVAILABLE)
+        
         self.current_pad_score = pad_raw
         self.pad_availability = pad_state
+        self.last_pad_diag = pad_diag  # Save for diagnostic logging
+        
         if pad_state != PAD_VALID:
             self.pad_state = f"Unavailable ({pad_state})"
         else:
@@ -241,6 +228,28 @@ class LiveDemoApp:
 
                 b_eval = self.behavioral.evaluate(payload)
                 b_score = b_eval.get('keystroke_score', 0.5)
+                
+                if self.is_enrolled and self.behavioral_availability == MODALITY_VALID:
+                    # Re-Authentication behavioral audit
+                    b_profile = self.behavioral.profiles.get("live_demo_start_user")
+                    if b_profile:
+                        scaler = b_profile["scaler"]
+                        model = b_profile["model"]
+                        
+                        print("\n--- RE-AUTHENTICATION BEHAVIORAL AUDIT ---")
+                        arr = np.array(kb_vec)
+                        print(f"  Raw vector: shape={arr.shape} mean={arr.mean():.4f} std={arr.std():.4f} min={arr.min():.4f} max={arr.max():.4f}")
+                        
+                        scaled = scaler.transform(arr.reshape(1, -1))
+                        print(f"  Scaled vec: shape={scaled.shape} mean={scaled.mean():.4f} std={scaled.std():.4f} min={scaled.min():.4f} max={scaled.max():.4f}")
+                        
+                        decision = model.decision_function(scaled)[0]
+                        predict = model.predict(scaled)[0]
+                        
+                        print(f"  OneClassSVM predict:          {predict} (1=inlier, -1=outlier)")
+                        print(f"  OneClassSVM decision_function: {decision:.4f}")
+                        print(f"  Behavior score (mapped):       {b_score:.4f}")
+                
                 self.current_behavioral_score = b_score
                 self.behavioral_availability = MODALITY_VALID
                 self.behavioral_state = (f"Genuine ({b_score:.2f})" if b_score > 0.5
@@ -307,15 +316,29 @@ class LiveDemoApp:
         t1 = time.time()
         self.latency_ms = (t1 - t0) * 1000
 
-        # --- DIAGNOSTIC: Log trust engine inputs (once per second) ---
+        # --- DIAGNOSTIC: Log trust engine inputs & PAD specifics ---
         now = time.time()
         if self.is_enrolled and (now - self._last_diag_time > 1.0 or self._diag_logged_auth):
             self._last_diag_time = now
             if self._diag_logged_auth:
                 self._diag_logged_auth = False
-                print("\n" + "=" * 60)
-                print("TRUST ENGINE DIAGNOSTIC (post-typing)")
-                print("=" * 60)
+                print("\n" + "=" * 70)
+                print("LIVE AUTHENTICATION ATTEMPT - DIAGNOSTIC TRACE")
+                print("=" * 70)
+                
+                # Print PAD diagnostics right before trust engine output
+                if hasattr(self, 'last_pad_diag'):
+                    print("\n--- PAD PIPELINE TRACE ---")
+                    print(f"  Input frame shape:      {self.last_pad_diag.get('frame_shape')}")
+                    print(f"  Preprocessing fn:       {self.last_pad_diag.get('preprocess_fn')}")
+                    print(f"  Tensor shape sent:      {self.last_pad_diag.get('tensor_shape')}")
+                    print(f"  Checkpoint path:        {self.last_pad_diag.get('checkpoint')}")
+                    print(f"  Class mapping:          {self.last_pad_diag.get('class_mapping')}")
+                    print(f"  Raw logit (pre-sig):    {self.last_pad_diag.get('logit'):.6f}")
+                    print(f"  Sigmoid probability:    {self.last_pad_diag.get('score'):.6f}")
+                    print(f"  Actual image saved to:  debug/live_pad_input.jpg")
+                
+                print("\n--- TRUST ENGINE INPUTS ---")
             print(f"  facial_s={self.current_face_score:.4f}  facial_c={facial_c:.2f}")
             print(f"  pad_s={pad_s:.4f} ({self.pad_availability})  pad_c={pad_c:.2f}")
             print(f"  rppg_s={rppg_s:.4f} ({self.rppg_availability})  rppg_c={rppg_c:.2f}")
@@ -483,18 +506,21 @@ class LiveDemoApp:
                     if key == ord('e'):
                         if self.pending_kb_vec is not None:
                             # User pressed E after collecting a sample
-                            # If we have enough samples, commit enrollment
+                            # Require at least 3 samples
                             n = len(self.enrolled_behavioral_samples)
-                            if n >= 1:
+                            if n >= 3:
                                 # Commit enrollment with ALL collected samples
                                 self.enroll_user(frame, self.enrolled_behavioral_samples)
                                 self.enrollment_mode = False
                                 self.keys_collector.reset()
-                                self.behavioral_state = f"Enrolled ({n} sample(s)) — awaiting typing..."
+                                self.behavioral_state = f"Enrolled ({n} samples) — awaiting typing..."
                                 self.pending_kb_vec = None
-                                self.last_typing_info = f"Enrolled with {n} real sample(s)"
+                                self.last_typing_info = f"Enrolled with {n} physical samples"
                             else:
-                                print("Please finish typing the correct password first!")
+                                print(f"You have {n} sample(s). Please provide at least 3-5 real samples for enrollment!")
+                                print("Type 'start' + Enter again.")
+                                self.pending_kb_vec = None
+                                self.keys_collector.reset()
                         else:
                             # No pending vector yet — prompt to type
                             print("Please type 'start' + Enter to provide a typing sample.")

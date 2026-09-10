@@ -105,43 +105,62 @@ class PADDetector:
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
-    def detect_frame(self, frame: np.ndarray) -> tuple:
+    def detect_frame_with_diagnostics(self, frame: np.ndarray) -> dict:
         """
         Evaluate PAD on a full BGR frame using TRAINING-IDENTICAL preprocessing.
-        
-        This matches the domain the CNN was trained on (full uncropped images).
-        
-        Args:
-            frame: BGR numpy array from webcam (H, W, 3)
-            
-        Returns:
-            (score, state): score in [0.0, 1.0], state is PAD_VALID/UNAVAILABLE/FAILED
+        Returns a dictionary with full diagnostic information.
         """
         if frame is None or frame.size == 0:
-            return 0.0, PAD_UNAVAILABLE
+            return {"score": 0.0, "state": PAD_UNAVAILABLE, "logit": 0.0}
             
         if not self._model_loaded:
-            return 0.0, PAD_UNAVAILABLE
+            return {"score": 0.0, "state": PAD_UNAVAILABLE, "logit": 0.0}
         
         try:
-            # Convert BGR → RGB → PIL (matches training pipeline exactly)
+            # Convert BGR -> RGB -> PIL (matches training pipeline exactly)
             rgb = frame[..., ::-1].copy()
             pil_img = Image.fromarray(rgb)
+            
+            # Hook into the pre-sigmoid linear layer to get raw logits
+            pre_sigmoid_val = None
+            def hook_fn(module, input, output):
+                nonlocal pre_sigmoid_val
+                pre_sigmoid_val = input[0].item()
+                
+            hook = self.model.classifier[2].register_forward_hook(hook_fn)
             
             with torch.no_grad():
                 tensor = self._frame_transform(pil_img).unsqueeze(0).to(self.device)
                 output = self.model(tensor)
                 score = output.item()
                 
-            # Save debug crop once
-            if not self._debug_saved:
-                self._save_debug_crop(tensor.squeeze(0), "live_pad_fullframe.jpg")
+            hook.remove()
                 
-            return score, PAD_VALID
+            # Save exact input frame once
+            if not self._debug_saved:
+                import cv2
+                os.makedirs(self._debug_dir, exist_ok=True)
+                cv2.imwrite(os.path.join(self._debug_dir, "live_pad_input.jpg"), frame)
+                self._save_debug_crop(tensor.squeeze(0), "live_pad_tensor.jpg")
+                self._debug_saved = True
+                
+            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+            checkpoint_path = os.path.join(base_dir, 'data', 'models', 'pad_cnn.pth')
+                
+            return {
+                "score": score,
+                "logit": pre_sigmoid_val,
+                "state": PAD_VALID,
+                "frame_shape": frame.shape,
+                "tensor_shape": tuple(tensor.shape),
+                "preprocess_fn": "BGR -> RGB -> PIL -> Resize(128) -> ToTensor -> Normalize",
+                "class_mapping": "1.0=LIVE, 0.0=SPOOF",
+                "checkpoint": checkpoint_path
+            }
             
         except Exception as e:
             print(f"PAD detect_frame error: {e}")
-            return 0.0, PAD_FAILED
+            return {"score": 0.0, "state": PAD_FAILED, "logit": 0.0}
 
     def detect(self, face_tensor: torch.Tensor) -> float:
         """
