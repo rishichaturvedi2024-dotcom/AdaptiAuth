@@ -44,14 +44,16 @@ class BehavioralModel:
         """
         session_id = payload.get("session_id", "unknown")
         features = payload.get("features", [])
+        if not features:
+            features = self._extract_features(payload)
         
         # If no profile exists, or no features are passed, return default/fallback
         if session_id not in self.profiles or not features:
             return {
-                "keystroke_score": 0.5,
-                "mouse_score": 0.8,
+                "keystroke_score": self._keystroke_score(payload),
+                "mouse_score": self._mouse_score(payload),
                 "context_score": 0.99 if payload.get("device_fingerprint") else 0.5,
-                "confidence": 0.5
+                "confidence": min(0.85, 0.25 + min(len(features) / 20.0, 0.6))
             }
             
         profile = self.profiles[session_id]
@@ -74,7 +76,52 @@ class BehavioralModel:
         
         return {
             "keystroke_score": mapped_score,
-            "mouse_score": 0.8, # stubbed
+            "mouse_score": self._mouse_score(payload),
             "context_score": context_score,
             "confidence": 0.9
         }
+
+    @staticmethod
+    def _extract_features(payload: Dict[str, Any]) -> List[float]:
+        keys = payload.get("keystrokes", [])
+        moves = payload.get("mouse_events", [])
+        key_times = [float(event["timestamp"]) for event in keys if "timestamp" in event]
+        move_times = [float(event["timestamp"]) for event in moves if "timestamp" in event]
+        key_intervals = np.diff(key_times) if len(key_times) > 1 else np.array([0.0])
+        move_intervals = np.diff(move_times) if len(move_times) > 1 else np.array([0.0])
+        return [
+            float(len(keys)),
+            float(np.mean(key_intervals)),
+            float(np.std(key_intervals)),
+            float(len(moves)),
+            float(np.mean(move_intervals)),
+            float(np.std(move_intervals)),
+        ]
+
+    @staticmethod
+    def _keystroke_score(payload: Dict[str, Any]) -> float:
+        events = payload.get("keystrokes", [])
+        if len(events) < 2:
+            return 0.5
+        timestamps = np.array([float(event["timestamp"]) for event in events])
+        intervals = np.diff(timestamps)
+        valid = intervals[(intervals > 0) & (intervals < 3000)]
+        if len(valid) == 0:
+            return 0.35
+        variability = float(np.std(valid) / (np.mean(valid) + 1e-6))
+        return float(np.clip(0.9 - variability * 0.35, 0.35, 0.95))
+
+    @staticmethod
+    def _mouse_score(payload: Dict[str, Any]) -> float:
+        events = payload.get("mouse_events", [])
+        if len(events) < 2:
+            return 0.8
+        distances = []
+        for previous, current in zip(events, events[1:]):
+            dx = float(current.get("x", 0)) - float(previous.get("x", 0))
+            dy = float(current.get("y", 0)) - float(previous.get("y", 0))
+            distances.append(float(np.hypot(dx, dy)))
+        if not distances:
+            return 0.5
+        movement = float(np.mean(distances))
+        return float(np.clip(0.45 + min(movement / 500.0, 0.45), 0.45, 0.9))

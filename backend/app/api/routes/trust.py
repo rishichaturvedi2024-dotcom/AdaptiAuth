@@ -21,6 +21,7 @@ from app.models.schemas import (
 from ml.fusion.trust_engine import TrustEngine
 from ml.explainability.shap_explainer import TrustSHAPExplainer
 from app.services.policy import PolicyEngine
+from app.services.live_state import live_signal_store
 
 router = APIRouter(prefix="/trust", tags=["Trust Scoring"])
 trust_engine = TrustEngine()
@@ -43,16 +44,18 @@ async def trigger_rescore(session_id: str):
     """
     Trigger an immediate re-scoring of the session.
     """
-    # For prototype without continuous signal DB, we'll mock the latest signals
-    # In reality, this would fetch the last 1-3 seconds of signals from DB
-    facial_s, facial_c = 0.90, 0.95
-    live_s, live_c = 0.88, 0.90
-    beh_s, beh_c = 0.78, 0.85
+    signals = live_signal_store.mark_stale_faces_absent(session_id)
+    facial_s, facial_c = signals.facial_score, signals.facial_confidence
+    live_s, live_c = signals.liveness_score, signals.liveness_confidence
+    beh_s, beh_c = signals.behavioral_score, signals.behavioral_confidence
     
     result = trust_engine.compute_trust_score(
-        facial_s, facial_c,
-        live_s, live_c,
-        beh_s, beh_c
+        facial_score=facial_s,
+        facial_conf=facial_c,
+        liveness_score=live_s,
+        liveness_conf=live_c,
+        behavioral_score=beh_s,
+        behavioral_conf=beh_c,
     )
     
     t_score = result["trust_score"]
@@ -82,14 +85,19 @@ async def get_trust_explanation(session_id: str):
     """
     Get the SHAP-explained trust score for a session.
     """
-    # For prototype, we mock fetching the latest signals from DB
-    facial_s, facial_c = 0.90, 0.95
-    live_s, live_c = 0.88, 0.90
-    beh_s, beh_c = 0.78, 0.85
+    signals = live_signal_store.mark_stale_faces_absent(session_id)
+    facial_s, facial_c = signals.facial_score, signals.facial_confidence
+    live_s, live_c = signals.liveness_score, signals.liveness_confidence
+    beh_s, beh_c = signals.behavioral_score, signals.behavioral_confidence
     
     # Recompute to get the score and policy
     result = trust_engine.compute_trust_score(
-        facial_s, facial_c, live_s, live_c, beh_s, beh_c
+        facial_score=facial_s,
+        facial_conf=facial_c,
+        liveness_score=live_s,
+        liveness_conf=live_c,
+        behavioral_score=beh_s,
+        behavioral_conf=beh_c,
     )
     t_score = result["trust_score"]
     
@@ -118,5 +126,18 @@ async def get_trust_explanation(session_id: str):
         policy_action=action,
         base_value=shap_explainer.base_value,
         attributions=attributions,
+        signals={
+            "facial_score": facial_s,
+            "facial_confidence": facial_c,
+            "liveness_score": live_s,
+            "liveness_confidence": live_c,
+            "behavioral_score": beh_s,
+            "behavioral_confidence": beh_c,
+            "keystroke_score": signals.keystroke_score,
+            "mouse_score": signals.mouse_score,
+            "context_score": signals.context_score,
+        },
+        weights=result["weights"],
+        updated_at=signals.updated_at,
         timestamp=datetime.now(timezone.utc),
     )

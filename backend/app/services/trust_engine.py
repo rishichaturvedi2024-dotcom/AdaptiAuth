@@ -40,8 +40,11 @@ class TrustEngine:
     def compute_trust_score(
         self,
         facial_score: Optional[float] = None,
+        facial_confidence: Optional[float] = None,
         liveness_score: Optional[float] = None,
+        liveness_confidence: Optional[float] = None,
         behavioral_score: Optional[float] = None,
+        behavioral_confidence: Optional[float] = None,
         weights: Optional[Dict[str, float]] = None,
     ) -> Tuple[float, Dict[str, float]]:
         """
@@ -52,6 +55,11 @@ class TrustEngine:
         per-signal confidence and reliability metrics.
         """
         w = weights or self.DEFAULT_WEIGHTS.copy()
+        confidences = {
+            "facial": facial_confidence if facial_confidence is not None else 1.0,
+            "liveness": liveness_confidence if liveness_confidence is not None else 1.0,
+            "behavioral": behavioral_confidence if behavioral_confidence is not None else 1.0,
+        }
 
         scores = {
             "facial": facial_score,
@@ -60,7 +68,10 @@ class TrustEngine:
         }
 
         # Handle missing signals: redistribute weight proportionally
-        available = {k: v for k, v in scores.items() if v is not None}
+        available = {
+            k: v for k, v in scores.items()
+            if v is not None and confidences[k] > 0
+        }
         if not available:
             return (0.0, w)
 
@@ -69,10 +80,17 @@ class TrustEngine:
             if total_available_weight > 0:
                 w = {k: w[k] / total_available_weight for k in available}
 
-        trust = sum(scores[k] * w[k] for k in available)
+        effective_weights = {k: w[k] * confidences[k] for k in available}
+        total_weight = sum(effective_weights.values())
+        if total_weight <= 0:
+            return (0.0, w)
+        effective_weights = {
+            k: value / total_weight for k, value in effective_weights.items()
+        }
+        trust = sum(scores[k] * effective_weights[k] for k in available)
         trust = max(0.0, min(1.0, trust))
 
-        return (round(trust, 4), w)
+        return (round(trust, 4), effective_weights)
 
     def classify_risk(self, trust_score: float) -> Tuple[RiskTier, PolicyAction]:
         """Map a trust score to a risk tier and policy action."""

@@ -4,10 +4,15 @@ export default function SOCDashboard() {
   const [explanation, setExplanation] = useState(null);
 
   useEffect(() => {
-    fetch('/api/trust/demo-session/explain')
-      .then(r => r.json())
-      .then(data => setExplanation(data))
-      .catch(() => {});
+    const refresh = () => {
+      fetch('/api/trust/demo-session/explain')
+        .then(r => r.ok ? r.json() : Promise.reject(new Error('explanation request failed')))
+        .then(data => setExplanation(data))
+        .catch(() => {});
+    };
+    refresh();
+    const timer = setInterval(refresh, 3000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -40,7 +45,31 @@ export default function SOCDashboard() {
           <h2>Trust Score Explainability (SHAP)</h2>
           {explanation ? (
             <div>
-              <p>Base Value: {explanation.base_value}</p>
+              <p>
+                Base Value: {explanation.base_value.toFixed(3)} |
+                Updated: {new Date(explanation.updated_at).toLocaleTimeString()}
+              </p>
+              <p>
+                Action: <strong>{explanation.policy_action}</strong>
+              </p>
+              <h3>Live Session Parameters</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem' }}>
+                {Object.entries(explanation.signals || {}).map(([name, value]) => (
+                  <div key={name} style={{ display: 'flex', justifyContent: 'space-between', background: '#222', padding: '0.35rem' }}>
+                    <span>{name.replaceAll('_', ' ')}</span>
+                    <strong>{Number(value).toFixed(3)}</strong>
+                  </div>
+                ))}
+              </div>
+              <h3>Dynamic Fusion Weights</h3>
+              <p>
+                {Object.entries(explanation.weights || {}).map(([name, value]) => (
+                  <span key={name} style={{ marginRight: '1rem' }}>
+                    {name}: {(Number(value) * 100).toFixed(1)}%
+                  </span>
+                ))}
+              </p>
+              <h3>SHAP Contributions</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
                 {explanation.attributions.map((attr, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#222', padding: '0.5rem', borderRadius: '4px' }}>

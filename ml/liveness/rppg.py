@@ -135,3 +135,6 @@ class RPPGExtractor:
         
         return min(max(mapped_confidence, 0.0), 1.0)
 
+    def reset(self) -> None:
+        """Discard buffered signal data after the monitored face disappears."""
+        self.buffer.clear()

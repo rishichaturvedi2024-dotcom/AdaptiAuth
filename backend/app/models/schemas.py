@@ -77,6 +77,7 @@ class LivenessResult(BaseModel):
     pad_spoof_probability: float = Field(..., ge=0.0, le=1.0, description="Presentation-attack spoof probability")
     liveness_score: float = Field(..., ge=0.0, le=1.0, description="Fused liveness sub-score")
     is_live: bool
+    face_detected: bool = True
 
 
 class BehavioralResult(BaseModel):
@@ -117,6 +118,9 @@ class ExplainedTrustScore(BaseModel):
     policy_action: PolicyAction
     attributions: List[SHAPAttribution]
     base_value: float = Field(description="SHAP base/expected value")
+    signals: Dict[str, float] = Field(default_factory=dict)
+    weights: Dict[str, float] = Field(default_factory=dict)
+    updated_at: datetime
     timestamp: datetime
 
 

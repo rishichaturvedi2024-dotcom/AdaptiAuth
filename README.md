@@ -120,7 +120,8 @@ python -m venv venv
 venv\Scripts\activate        # Windows
 # source venv/bin/activate   # Linux/macOS
 pip install -r requirements.txt
-uvicorn backend.app.main:app --reload --port 8000
+$env:PYTHONPATH = "$PWD\backend;$PWD"
+uvicorn app.main:app --reload --port 8000
 ```
 
 ### 2. Start the Frontend

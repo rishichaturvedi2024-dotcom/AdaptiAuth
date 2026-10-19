@@ -32,6 +32,7 @@ from ml.facial.matching import compute_similarity, is_match
 from ml.liveness.rppg import RPPGExtractor
 from ml.liveness.pad import PADDetector
 from ml.behavioral.sequence import BehavioralModel
+from app.services.live_state import live_signal_store
 
 router = APIRouter(prefix="/biometrics", tags=["Biometrics"])
 
@@ -113,7 +114,8 @@ async def verify_face(
 
 @router.post("/liveness", response_model=LivenessResult)
 async def check_liveness(
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    session_id: str = Form("demo-session"),
 ):
     """
     Process an image frame for liveness detection using rPPG and PAD.
@@ -130,7 +132,15 @@ async def check_liveness(
     face_tensor = face_aligner.align(img_np)
     
     if face_tensor is None:
-        raise HTTPException(status_code=400, detail="No face detected in the image")
+        rppg_extractor.reset()
+        live_signal_store.mark_face_absent(session_id)
+        return LivenessResult(
+            rppg_confidence=0.0,
+            pad_spoof_probability=1.0,
+            liveness_score=0.0,
+            is_live=False,
+            face_detected=False,
+        )
         
     # 2. Presentation Attack Detection (PAD)
     # PAD returns "liveness probability" (1.0 - spoof_prob)
@@ -143,12 +153,34 @@ async def check_liveness(
     # Real logic would be weighted: e.g. 0.7 * PAD + 0.3 * rPPG
     # For prototype:
     fused_liveness = 0.6 * pad_live_prob + 0.4 * rppg_conf
+    live_signal_store.update(
+        session_id,
+        facial_score=0.75,
+        facial_confidence=0.4,
+        liveness_score=fused_liveness,
+        liveness_confidence=0.7 if rppg_conf != 0.5 else 0.4,
+    )
     
     return LivenessResult(
         rppg_confidence=rppg_conf,
         pad_spoof_probability=(1.0 - pad_live_prob),
         liveness_score=fused_liveness,
-        is_live=(fused_liveness > 0.6)
+        is_live=(fused_liveness > 0.6),
+        face_detected=True,
+    )
+
+
+@router.post("/liveness/absent", response_model=LivenessResult)
+async def report_absent_face(session_id: str = Form("demo-session")):
+    """Lower biometric trust when the camera has no usable face frame."""
+    rppg_extractor.reset()
+    live_signal_store.mark_face_absent(session_id)
+    return LivenessResult(
+        rppg_confidence=0.0,
+        pad_spoof_probability=1.0,
+        liveness_score=0.0,
+        is_live=False,
+        face_detected=False,
     )
 
 @router.post("/behavior", response_model=BehavioralResult)
@@ -168,6 +200,14 @@ async def analyze_behavior(payload: BehavioralPayload):
     ctx_s = scores["context_score"]
     
     fused_behavior = (key_s * 0.4) + (mouse_s * 0.4) + (ctx_s * 0.2)
+    live_signal_store.update(
+        payload.session_id,
+        behavioral_score=fused_behavior,
+        behavioral_confidence=scores["confidence"],
+        keystroke_score=key_s,
+        mouse_score=mouse_s,
+        context_score=ctx_s,
+    )
     
     return BehavioralResult(
         keystroke_score=key_s,

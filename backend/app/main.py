@@ -25,8 +25,8 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown lifecycle hooks."""
     # Startup: initialize database schema
     init_db()
-    print(f"✓ {settings.app_name} started in {settings.app_env} mode")
-    print(f"✓ Database initialized at {settings.database_url}")
+    print(f"[OK] {settings.app_name} started in {settings.app_env} mode")
+    print(f"[OK] Database initialized at {settings.database_url}")
     
     # Start background loop
     await monitor.start()
@@ -35,7 +35,7 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     await monitor.stop()
-    print(f"✗ {settings.app_name} shutting down")
+    print(f"[STOP] {settings.app_name} shutting down")
 
 
 # ── App factory ──────────────────────────────────────────────
